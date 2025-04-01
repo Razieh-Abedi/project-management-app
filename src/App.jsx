@@ -5,21 +5,45 @@ import NewProject from "./components/NewProject";
 import NoProjectSelected from "./components/NoProjectSelected";
 
 function App() {
-  const [newProject, setNewProject] = useState(false);
   const [projectsState, setProjectsState] = useState({
-    selectedProject: undefined,
+    selectedProjectId: undefined,
     projects: [],
-  })
+  });
 
-  const newProjectHandler = () => {
-    setNewProject(true);
-  };
+  function handleStartAddProject() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: null,
+      };
+    });
+  }
+
+  function handleAddProject(projectData) {
+    setProjectsState((prevState) => {
+      const newProject = { ...projectData, id: Math.random() };
+      return {
+        ...prevState,
+        projects: [...prevState.projects, newProject],
+        selectedProjectId: undefined,
+      };
+    });
+  }
+
+  let content;
+  if (projectsState.selectedProjectId === undefined) {
+    content = <NoProjectSelected onNewProject={handleStartAddProject} />;
+  } else if (projectsState.selectedProjectId === null) {
+    content = <NewProject onAddProject={handleAddProject} />;
+  }
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectsSideBar onNewProject={newProjectHandler} />
-      {newProject && <NewProject />}
-      <NoProjectSelected/>
+      <ProjectsSideBar
+        onNewProject={handleStartAddProject}
+        projectsList={projectsState.projects}
+      />
+      {content}
     </main>
   );
 }
