@@ -51,6 +51,23 @@ function App() {
     });
   }
 
+  function handleDeleteTask(id) {
+    setProjectsState((prevState) => {
+      const updatedTasks = prevState.projects.map((project) =>
+        project.id === prevState.selectedProjectId
+          ? {
+              ...project,
+              tasks: project.tasks.filter((task) => task.id !== id),
+            }
+          : project
+      );
+      return {
+        ...prevState,
+        projects: updatedTasks,
+      };
+    });
+  }
+
   function handleCancelAddProject() {
     setProjectsState((prevState) => {
       return {
@@ -91,6 +108,7 @@ function App() {
       project={selectedProject}
       onDelete={handleDeleteProject}
       onAddTask={handleAddTask}
+      onDeleteTask={handleDeleteTask}
     />
   );
   if (projectsState.selectedProjectId === undefined) {

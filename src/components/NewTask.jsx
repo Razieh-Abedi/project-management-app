@@ -7,6 +7,9 @@ export default function NewTask({ onAddTask }) {
     setTaskInput(e.target.value);
   }
   function handleAddTask() {
+    if (taskInput.trim() === "") {
+      return; 
+    }
     onAddTask(taskInput);
     setTaskInput("");
   }
